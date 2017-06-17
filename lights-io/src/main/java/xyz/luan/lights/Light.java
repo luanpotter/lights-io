@@ -10,7 +10,7 @@ public class Light {
     @Id
     private IdRef<Light> id;
 
-    private String desciption;
+    private String description;
 
     private boolean state;
 
