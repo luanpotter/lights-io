@@ -10,6 +10,8 @@ public class Switch {
     @Id
     private IdRef<Switch> id;
 
+    private String description;
+
     private IdRef<Light> lightId;
 
     public IdRef<Light> getLightId() {
