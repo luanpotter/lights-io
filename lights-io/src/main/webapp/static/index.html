@@ -1,0 +1,42 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+
+  <title>Lights IO</title>
+  <meta name="description" content="A page to access the Lights IO API.">
+  <meta name="author" content="Luan">
+</head>
+
+<body>
+  <h1>Lights IO</h1>
+  <div>
+    <p>Toggle my light!</p>
+    <p>Switch Id: <span id="switch"></span></p>
+    <p><button id="toggle">Toggle</button></p>
+  </div>
+  <div id="results"></div>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script>
+    const qs = (key) => {
+      key = key.replace(/[*+?^$.\[\]{}()|\\\/]/g, "\\$&"); // escape RegEx meta chars
+      var match = location.search.match(new RegExp("[?&]"+key+"=([^&]+)(&|$)"));
+      return match && decodeURIComponent(match[1].replace(/\+/g, " "));
+    };
+
+    let switchId = qs('switchId');
+    jQuery($ => {
+      $('#switch').text(switchId);
+      $('#toggle').on('click', () => {
+        $.ajax({
+          method: 'PUT',
+          url: 'https://lights-io.appspot.com/api/switches/' + switchId + '/toggle'
+        }).done(data => {
+          $('#results').text(JSON.stringify(data));
+        });
+      });
+    });
+  </script>
+</body>
+</html>
