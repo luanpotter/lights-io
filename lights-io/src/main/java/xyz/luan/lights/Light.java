@@ -17,4 +17,12 @@ public class Light {
     public void toggle() {
         this.state = !this.state;
     }
+
+    public IdRef<Light> getId() {
+        return id;
+    }
+
+    public boolean getState() {
+        return state;
+    }
 }
