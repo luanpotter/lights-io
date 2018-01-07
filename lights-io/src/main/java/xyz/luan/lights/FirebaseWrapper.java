@@ -29,10 +29,10 @@ public class FirebaseWrapper {
     }
 
     public static void put(final String path, final Object object) {
-        HttpFacade facade = new HttpFacade("https://lights-io.firebaseio.com" + path + ".json");
-        facade.query("auth", getKey());
-        facade.body(object);
         try {
+            HttpFacade facade = new HttpFacade("https://lights-io.firebaseio.com" + path + ".json");
+            facade.query("auth", getKey());
+            facade.body(object);
             Response response = facade.put();
             System.out.println("Requested to Firebase; response: " + response.status());
             System.out.println(response.content());

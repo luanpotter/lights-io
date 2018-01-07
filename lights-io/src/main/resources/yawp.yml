@@ -1,3 +1,2 @@
-features:
-  default:
-    packagePrefix: xyz.luan.lights
+config:
+  packages: xyz.luan.lights
