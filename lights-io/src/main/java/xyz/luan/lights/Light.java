@@ -25,4 +25,8 @@ public class Light {
     public boolean getState() {
         return state;
     }
+
+    public void setState(boolean state) {
+        this.state = state;
+    }
 }

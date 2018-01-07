@@ -4,6 +4,8 @@ import io.yawp.commons.http.annotation.PUT;
 import io.yawp.repository.IdRef;
 import io.yawp.repository.shields.Shield;
 
+import java.util.Map;
+
 public class SwitchShield extends Shield<Switch> {
 
     @Override
@@ -17,7 +19,7 @@ public class SwitchShield extends Shield<Switch> {
     }
 
     @PUT
-    public void toggle(IdRef<Switch> id) {
+    public void toggle(IdRef<Switch> id, Map<String, String> params) {
         allow();
     }
 }
