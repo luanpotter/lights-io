@@ -26,6 +26,11 @@
             <artifactId>http-facade</artifactId>
             <version>2.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.firebase</groupId>
+            <artifactId>firebase-admin</artifactId>
+            <version>5.6.0</version>
+        </dependency>
         <!-- testing dependencies -->
         <dependency>
             <groupId>io.yawp</groupId>
@@ -48,8 +53,8 @@
                 <version>3.7.0</version>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
+                    <source>1.8</source>
+                    <target>1.8</target>
                 </configuration>
             </plugin>
 

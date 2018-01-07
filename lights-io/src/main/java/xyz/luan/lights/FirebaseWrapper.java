@@ -1,44 +1,51 @@
 package xyz.luan.lights;
 
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import xyz.luan.facade.HttpFacade;
 import xyz.luan.facade.Response;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class FirebaseWrapper {
 
-    private static String key;
+    private static FirebaseApp app;
 
-    private static String getKey() {
-        if (key == null) {
-            key = parseKey();
+    private static FirebaseApp getApp() {
+        if (app == null) {
+            app = createApp();
         }
-        return key;
+        return app;
     }
 
-    private static String parseKey() {
-        InputStream stream = FirebaseWrapper.class.getResourceAsStream("/lights-io-firebase.key");
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(stream))) {
-            return reader.readLine();
-        } catch (IOException e) {
-            throw new RuntimeException("Didn't find firebase secret key in resources folder!", e);
+    private static FirebaseApp createApp() {
+        try {
+            FileInputStream serviceAccount = new FileInputStream("/lights-io-key.json");
+
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                    .setDatabaseUrl("https://lights-io.firebaseio.com/")
+                    .build();
+
+            return FirebaseApp.initializeApp(options);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 
     public static void put(final String path, final Object object) {
-        try {
-            HttpFacade facade = new HttpFacade("https://lights-io.firebaseio.com" + path + ".json");
-            facade.query("auth", getKey());
-            facade.body(object);
-            Response response = facade.put();
-            System.out.println("Requested to Firebase; response: " + response.status());
-            System.out.println(response.content());
-        } catch (IOException e) {
-            System.err.println("There was a problem updating Firebase!");
-            e.printStackTrace();
-        }
+        FirebaseDatabase db = FirebaseDatabase.getInstance(getApp());
+        db.getReference(path).setValue(object, (error, ref) -> {
+            if (error != null) {
+                System.err.println("There was a problem updating Firebase!");
+                error.toException().printStackTrace();
+            } else {
+                System.out.println("Requested to Firebase succeeded!");
+            }
+        });
     }
 }
