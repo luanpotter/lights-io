@@ -22,11 +22,11 @@ public class Main {
         api.listen(text -> {
             try {
                 System.out.println("> " + text);
-                if (text.contains("lights on")) {
+                if (text.contains("lights on") || text.contains("light on")) {
                     put(switchUrl + "/toggle?s=on");
-                } else if (text.contains("lights off")) {
+                } else if (text.contains("lights off") || text.contains("light off")) {
                     put(switchUrl + "/toggle?s=off");
-                } else if (text.contains("lights")) {
+                } else if (text.contains("lights") || text.contains("light")) {
                     put(switchUrl + "/toggle");
                 } else if (text.contains("exit")) {
                     System.out.println("I heard 'exit'. It's time to say goodbye o/");
