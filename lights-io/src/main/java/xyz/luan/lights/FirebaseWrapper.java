@@ -24,7 +24,7 @@ public class FirebaseWrapper {
 
     private static FirebaseApp createApp() {
         try {
-            FileInputStream serviceAccount = new FileInputStream("/lights-io-key.json");
+            InputStream serviceAccount = FirebaseWrapper.class.getResourceAsStream("/lights-io-key.json");
 
             FirebaseOptions options = new FirebaseOptions.Builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
