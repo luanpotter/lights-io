@@ -12,8 +12,18 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
         String switchUrl = args[0];
-        InputStream credentialFile = Main.class.getResourceAsStream("/lights-io-key.json");
+        if (switchUrl == null || switchUrl.isEmpty()) {
+            System.err.println("You need to pass the url (DOMAIN.COM/api/switches/ID)");
+            return;
+        }
 
+        InputStream credentialFile = Main.class.getResourceAsStream("/lights-io-key.json");
+        if (credentialFile == null) {
+            System.err.println("Credentials file not found!");
+            return;
+        }
+
+        System.out.println("Starting...");
         Microphone mic = new Microphone(SAMPLE_RATE);
         SpeechAPI api = new SpeechAPI(SAMPLE_RATE, credentialFile);
 
@@ -38,6 +48,7 @@ public class Main {
             }
         });
 
+        System.out.println("Listening!");
         mic.start();
     }
 
