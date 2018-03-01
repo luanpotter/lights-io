@@ -65,7 +65,9 @@ function streamingMicRecognize(bot) {
 	.on('data', data => {
     if (data.results[0] && data.results[0].alternatives[0]) {
       const response = bot.process(data.results[0].alternatives[0].transcript);
-      speak(response);
+      if (response) {
+        speak(response);
+      }
     }
   });
 
