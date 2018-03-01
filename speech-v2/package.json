@@ -1,0 +1,12 @@
+{
+  "name": "speech-v2",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Luan Nico",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "@google-cloud/speech": "^1.1.0",
+    "node-record-lpcm16": "^0.3.0"
+  }
+}
