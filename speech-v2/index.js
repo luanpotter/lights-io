@@ -1,24 +1,25 @@
+#!/bin/node
+
 const fs = require('fs');
 
 const speech = require('@google-cloud/speech');
-const record = require('node-record-lpcm16');
 
 const AWS = require('aws-sdk');
 const Stream = require('stream');
-const Speaker = require('speaker');
+const ncs = new (require('netcat/server'))();
+const ncc = new (require('netcat/client'))();
 
 AWS.config.loadFromPath('./aws-key.json');
 const Polly = new AWS.Polly();
-const SPEAKER_CONFIG = {
-  channels: 1,
-  bitDepth: 16,
-  sampleRate: 16000
-};
+
+const encoding = 'LINEAR16';
+const sampleRateHertz = 16000;
 
 const speak = (text) => {
   let params = {
 	  'Text': text ,
 	  'OutputFormat': 'pcm',
+    'SampleRate': '16000',
 	  'VoiceId': 'Kendra'
   };
 
@@ -27,8 +28,9 @@ const speak = (text) => {
 	  	console.log(err.code);
 	  } else if (data) {
 	  	if (data.AudioStream instanceof Buffer) {
+        console.log('speaking');
+        const player = ncc.addr('192.168.100.4').port(7891).connect().stream();
         const buffer = new Stream.PassThrough();
-        const player = new Speaker(SPEAKER_CONFIG);
 
         buffer.end(data.AudioStream);
         buffer.pipe(player);
@@ -36,7 +38,6 @@ const speak = (text) => {
         player.on('finish', () => {
             buffer.unpipe(player);
             buffer.end();
-            player.close();
         });
 	  	}
 	  }
@@ -46,44 +47,39 @@ const speak = (text) => {
 function streamingMicRecognize(bot) {
   const projectId = 'lights-io';
   const client = new speech.SpeechClient({ projectId });
-  const encoding = 'LINEAR16';
-  const sampleRateHertz = 16000;
   const languageCode = 'en-US';
 
   const request = {
-	config: {
-	  encoding,
-	  sampleRateHertz,
-	  languageCode,
-	},
-	interimResults: false, // If you want interim results, set this to true
+	  config: {
+	    encoding,
+	    sampleRateHertz,
+	    languageCode,
+	  },
+	  interimResults: false, // If you want interim results, set this to true
   };
 
-  const recognizeStream = client
+  let recognizeStream;
+  const maker = () => client
 	.streamingRecognize(request)
-	.on('error', console.error)
+    .on('error', () => make())
 	.on('data', data => {
+    console.log('id\'ed');
     if (data.results[0] && data.results[0].alternatives[0]) {
       const response = bot.process(data.results[0].alternatives[0].transcript);
+      console.log('response: ' + response);
       if (response) {
         speak(response);
       }
     }
   });
 
-  // Start recording and send the microphone input to the Speech API
-  record
-	.start({
-	  sampleRateHertz: sampleRateHertz,
-	  threshold: 0,
-	  // Other options, see https://www.npmjs.com/package/node-record-lpcm16#options
-	  verbose: false,
-	  recordProgram: 'arecord',
-	  silence: '10.0',
-	})
-	.on('error', console.error)
-	.pipe(recognizeStream);
-
+  const piper = ncs.port(7890).listen();
+  const make = () => {
+    if (recognizeStream) recognizeStream.end();
+    recognizeStream = maker();
+    piper.pipe(recognizeStream);
+  };
+  make();
   console.log('Listening, press Ctrl+C to stop.');
 }
 
