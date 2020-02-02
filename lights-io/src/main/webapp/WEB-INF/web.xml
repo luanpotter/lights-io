@@ -36,6 +36,16 @@
         <url-pattern>/api/_tasks/*</url-pattern>
     </servlet-mapping>
 
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>everything</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <user-data-constraint>
+            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+
     <servlet>
         <servlet-name>EndpointFixturesServlet</servlet-name>
         <servlet-class>io.yawp.servlet.FixturesServlet</servlet-class>

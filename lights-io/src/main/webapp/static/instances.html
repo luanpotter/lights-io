@@ -1,0 +1,61 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Instance Manager</title>
+  <meta name="description" content="A page to access the Instance API.">
+  <meta name="author" content="Luan">
+</head>
+
+<body>
+  <h1>Instance Manager</h1>
+  <div>
+    <label for="instance">Instance ID:</label><input id="instance" type="text" />
+    <label for="key">Access Key:</label><input id="key" type="text" />
+    <p>DANGER! Be Careful!</p>
+    <p>
+      <button id="status">Status</button>
+      <button id="start">Start</button>
+      <button id="stop">Stop</button>
+    </p>
+  </div>
+  <div id="results"></div>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script>
+    const qs = (key) => {
+      key = key.replace(/[*+?^$.\[\]{}()|\\\/]/g, "\\$&"); // escape RegEx meta chars
+      const match = location.search.match(new RegExp("[?&]"+key+"=([^&]+)(&|$)"));
+      return match && decodeURIComponent(match[1].replace(/\+/g, " "));
+    };
+
+    const queryInstance = qs('instance');
+    const queryKey = qs('key');
+
+    jQuery($ => {
+      $('#instance').val(queryInstance);
+      $('#key').val(queryKey);
+
+      const buttonHandler = (action, method) => () => {
+        const instance = $('#instance').val();
+        const key = $('#key').val();
+        $.ajax({
+          method: action,
+          url: `https://lights-io.appspot.com/api/instances/${instance}${method}`,
+          headers: {
+            'Instance-Auth-Key': key,
+          },
+        }).done(data => {
+          $('#results').text(JSON.stringify(data));
+        });
+      };
+
+      $('#status').on('click', buttonHandler('GET', ''));
+      $('#start').on('click', buttonHandler('POST', '/start'));
+      $('#stop').on('click', buttonHandler('POST', '/stop'));
+    });
+  </script>
+</body>
+</html>

@@ -22,11 +22,11 @@
   <script>
     const qs = (key) => {
       key = key.replace(/[*+?^$.\[\]{}()|\\\/]/g, "\\$&"); // escape RegEx meta chars
-      var match = location.search.match(new RegExp("[?&]"+key+"=([^&]+)(&|$)"));
+      const match = location.search.match(new RegExp("[?&]"+key+"=([^&]+)(&|$)"));
       return match && decodeURIComponent(match[1].replace(/\+/g, " "));
     };
 
-    let switchId = qs('switchId');
+    const switchId = qs('switchId');
     jQuery($ => {
       $('#switch').text(switchId);
       $('#toggle').on('click', () => {
