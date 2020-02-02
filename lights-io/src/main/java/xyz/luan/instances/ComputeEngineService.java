@@ -21,7 +21,7 @@ public class ComputeEngineService {
 
 	public static String instanceStatus(Instance instance) {
 		try {
-			String statusApi = instance.getIp() + "/api/status";
+			String statusApi = instance.getIp() + ":8080/api/status";
 			HttpFacade request = new HttpFacade(statusApi).timeout(3000);
 			return request.get().content();
 		} catch (IOException ex) {
@@ -30,7 +30,7 @@ public class ComputeEngineService {
 	}
 
 	public static String instanceStop(Instance instance) throws IOException {
-		String statusApi = instance.getIp() + "/api/stop";
+		String statusApi = instance.getIp() + ":8080/api/stop";
 		HttpFacade request = new HttpFacade(statusApi).timeout(3000);
 		return request.post().content();
 	}
