@@ -3,7 +3,9 @@ package xyz.luan.lights;
 import io.yawp.repository.IdRef;
 import io.yawp.repository.annotations.Endpoint;
 import io.yawp.repository.annotations.Id;
+import lombok.Data;
 
+@Data
 @Endpoint(path = "/lights")
 public class Light {
 
@@ -16,17 +18,5 @@ public class Light {
 
     public void toggle() {
         this.state = !this.state;
-    }
-
-    public IdRef<Light> getId() {
-        return id;
-    }
-
-    public boolean getState() {
-        return state;
-    }
-
-    public void setState(boolean state) {
-        this.state = state;
     }
 }

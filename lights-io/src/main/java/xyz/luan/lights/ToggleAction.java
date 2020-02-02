@@ -16,7 +16,7 @@ public class ToggleAction extends Action<Switch> {
         } else {
             light.toggle();
         }
-        FirebaseWrapper.put(light.getId().toString(), light.getState());
+        FirebaseWrapper.put(light.getId().toString(), light.isState());
         return yawp.save(light);
     }
 }
