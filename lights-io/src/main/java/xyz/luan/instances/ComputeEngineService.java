@@ -8,6 +8,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.compute.Compute;
 
 import java.io.IOException;
+import java.util.Collections;
 
 public class ComputeEngineService {
 
@@ -25,7 +26,9 @@ public class ComputeEngineService {
 		if (instances == null) {
 			HttpTransport transport = new NetHttpTransport();
 			JsonFactory jsonFactory = new GsonFactory();
-			GoogleCredential credential = GoogleCredential.getApplicationDefault();
+			GoogleCredential credential = GoogleCredential.getApplicationDefault().createScoped(
+				Collections.singletonList("https://www.googleapis.com/auth/compute")
+			);
 			Compute compute = new Compute.Builder(transport, jsonFactory, credential).build();
 			instances = compute.instances();
 		}

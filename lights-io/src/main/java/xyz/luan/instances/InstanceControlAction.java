@@ -9,12 +9,14 @@ import java.io.IOException;
 public class InstanceControlAction extends Action<Instance> {
 
 	@POST("start")
-	public void start(IdRef<Instance> id) throws IOException {
+	public String start(IdRef<Instance> id) throws IOException {
 		ComputeEngineService.startInstance(id.fetch());
+		return "Instance started.";
 	}
 
 	@POST("stop")
-	public void stop(IdRef<Instance> id) {
+	public String stop(IdRef<Instance> id) {
 		throw new RuntimeException("Not implemented yet!");
+		// return "Instance stopped.";
 	}
 }

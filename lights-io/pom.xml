@@ -11,7 +11,7 @@
     <properties>
         <yawp.version>2.0.0alpha</yawp.version>
         <appengine.app.version>1</appengine.app.version>
-        <appengine.target.version>1.9.60</appengine.target.version>
+        <appengine.target.version>1.9.70</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
@@ -35,6 +35,11 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.10</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.api-client</groupId>
+            <artifactId>google-api-client</artifactId>
+            <version>1.23.0</version>
         </dependency>
         <dependency>
             <groupId>com.google.cloud</groupId>
