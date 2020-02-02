@@ -6,6 +6,7 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.google.api.services.compute.Compute;
+import xyz.luan.facade.HttpFacade;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -14,8 +15,24 @@ public class ComputeEngineService {
 
 	private static Compute.Instances instances;
 
-	public static void startInstance(Instance instance) throws IOException {
+	public static void instanceStart(Instance instance) throws IOException {
 		instances().start(projectId(), instance.getZone(), instance.getName()).execute();
+	}
+
+	public static String instanceStatus(Instance instance) {
+		try {
+			String statusApi = instance.getIp() + "/api/status";
+			HttpFacade request = new HttpFacade(statusApi).timeout(3000);
+			return request.get().content();
+		} catch (IOException ex) {
+			return "Off";
+		}
+	}
+
+	public static String instanceStop(Instance instance) throws IOException {
+		String statusApi = instance.getIp() + "/api/stop";
+		HttpFacade request = new HttpFacade(statusApi).timeout(3000);
+		return request.post().content();
 	}
 
 	private static String projectId() {
